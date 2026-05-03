@@ -2,6 +2,8 @@ import { prisma } from "@/lib/prisma";
 import { getServerAuthSession } from "@/lib/session";
 import Link from "next/link";
 
+export const dynamic = "force-dynamic";
+
 interface MemberPageProps {
   params: { id: string };
 }

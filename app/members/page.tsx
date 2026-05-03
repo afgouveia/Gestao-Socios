@@ -1,6 +1,9 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { getServerAuthSession } from "@/lib/session";
+import { ImportExcelButton } from "./import-excel-button";
+
+export const dynamic = "force-dynamic";
 
 async function fetchMembers() {
   return prisma.member.findMany({
@@ -36,6 +39,7 @@ export default async function MembersPage() {
             <p>Bem-vindo, {session.user?.name ?? session.user?.email}. Aqui estão os associados registados.</p>
           </div>
           <div style={{ display: "flex", gap: "10px" }}>
+            <ImportExcelButton />
             <Link href="/payments">
               <button>Pagamentos</button>
             </Link>
@@ -52,10 +56,12 @@ export default async function MembersPage() {
           <table>
             <thead>
               <tr>
+                <th>N.º</th>
                 <th>Nome</th>
                 <th>Categoria</th>
                 <th>Email</th>
                 <th>Telefone</th>
+                <th>Arquivo</th>
                 <th>Submetido</th>
                 <th>Pagamentos</th>
               </tr>
@@ -63,12 +69,14 @@ export default async function MembersPage() {
             <tbody>
               {members.map((member: any) => (
                 <tr key={member.id}>
+                  <td>{member.memberNumber ?? "-"}</td>
                   <td>
                     <Link href={`/members/${member.id}`}>{member.name}</Link>
                   </td>
                   <td>{member.category ?? "-"}</td>
                   <td>{member.email ?? "-"}</td>
                   <td>{member.phone ?? "-"}</td>
+                  <td>{member.formInArchive ? "Sim" : "Nao"}</td>
                   <td>{member.submittedAt ? new Date(member.submittedAt).toLocaleDateString() : "-"}</td>
                   <td>{member.payments.length}</td>
                 </tr>
